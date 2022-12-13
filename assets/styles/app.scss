@@ -1,0 +1,19 @@
+@import '~bootstrap/scss/bootstrap';
+
+.container {
+    max-width: 800px;
+}
+
+.form-std {
+    max-width: 800px;
+    margin: 0 auto;
+    & label {
+        margin-bottom: 10px;
+    }
+    .form-control {
+        margin-bottom: 20px;
+    }
+}
+.list-group {
+    max-width: 600px;
+}

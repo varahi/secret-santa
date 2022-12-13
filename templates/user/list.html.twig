@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+{% block title %}Create user{% endblock %}
+{% block body %}
+
+    <div class="container">
+        {% include 'partials/_navigation.html.twig' %}
+        {% include 'partials/_message.html.twig' %}
+
+        <h1>{{ 'Users list'|trans }}</h1>
+        {% if users is not null %}
+            <ul class="list-group">
+            {% for user in users %}
+                <li class="list-group-item">{{ user.fullName }} {{ user.email }}</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+            <p>{{ 'No items'|trans }}</p>
+        {% endif %}
+    </div>
+{% endblock %}

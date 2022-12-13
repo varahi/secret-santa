@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+{% block title %}Create user{% endblock %}
+{% block body %}
+
+    <div class="container">
+        {% include 'partials/_navigation.html.twig' %}
+        {% include 'partials/_message.html.twig' %}
+
+        <h1>{{ 'Send gift'|trans }}</h1>
+{#        {{ form_start(form, {'attr' : {'class': 'form-std', 'autocomplete': 'off'}} ) }}
+        <div class="form-group">
+            {{ form_row(form.fullName) }}
+            {{ form_row(form.email) }}
+            <button type="submit" class="btn btn-primary">{{ 'Send'|trans }}</button>
+        </div>
+        {{ form_end(form) }}#}
+    </div>
+{% endblock %}
