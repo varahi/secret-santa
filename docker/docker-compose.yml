@@ -1,0 +1,71 @@
+version: '3.3'
+
+services:
+  #######################################
+  # PHP application Docker container
+  #######################################
+  web_app:
+    build:
+      context: web/
+      dockerfile: Dockerfile
+    container_name: 'santa_web'
+    links:
+      - web_mysql:db
+#      - redis
+    ports:
+      - "80:80"
+      - "443:443"
+      - "2022:22"
+    extra_hosts:
+      - "santa.localhost:127.0.0.1"
+    volumes:
+      - ../:/app/
+      - ./:/docker/
+    cap_add:
+      - SYS_PTRACE
+    privileged: true
+    env_file:
+      - etc/environment.yml
+      - etc/environment.development.yml
+
+  #######################################
+  # MariaDB server
+  #######################################
+  web_mysql:
+    image: mariadb:10.3
+    container_name: 'santa_mysql'
+    ports:
+      - 3306:3306
+    volumes:
+      - ./store/mysql:/var/lib/mysql
+      - ./store/my.cnf:/etc/mysql/conf.d/custom.cnf
+    environment:
+      MYSQL_ROOT_PASSWORD: dev
+      MYSQL_DATABASE: symfony
+      MYSQL_USER: dev
+      MYSQL_PASSWORD: dev
+
+  #######################################
+  # Phpmyadmin
+  #######################################
+  phpmyadmin:
+    container_name: 'santa_phpmyadmin'
+    image: phpmyadmin/phpmyadmin
+    links:
+      - web_mysql:db
+    ports:
+      - 8765:80
+    environment:
+      MYSQL_ROOT_PASSWORD: dev
+    depends_on:
+      - web_mysql
+
+  #######################################
+  # Mailhoq
+  #######################################
+  mailhog:
+    image: mailhog/mailhog
+    container_name: 'santa_mailhog'
+    ports:
+      - "1026:1025"
+      - "8026:8025"

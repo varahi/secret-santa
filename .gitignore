@@ -32,7 +32,6 @@ composer.lock
 composer.phar
 docker-compose.override.yml
 docker-compose.yml
-docker/
 php-cs-fixer
 phpunit.xml.dist
 public_html/
