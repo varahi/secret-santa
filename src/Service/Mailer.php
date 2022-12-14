@@ -2,16 +2,10 @@
 
 namespace App\Service;
 
-use App\Entity\Answer;
-use App\Entity\Order;
-use App\Entity\Ticket;
-use App\Entity\User;
-use App\Entity\Request as UserRequest;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
 use Twig\Environment;
-use Symfony\Component\Mime\Email;
-use Symfony\Component\HttpFoundation\Response;
+use App\Entity\User;
 
 class Mailer
 {
@@ -19,7 +13,7 @@ class Mailer
 
     public function __construct(
         MailerInterface $mailer,
-        Environment $twig
+        Environment     $twig,
     ) {
         $this->mailer = $mailer;
         $this->twig = $twig;
@@ -28,18 +22,38 @@ class Mailer
     /**
      * @throws \Symfony\Component\Mailer\Exception\TransportExceptionInterface
      */
-    public function sendNewCompanyEmail(User $user, string $subject, string $template, $plainPassword)
+    public function sendEmail(string $subject, string $template)
+    {
+        $date = new \DateTime();
+        $email = (new TemplatedEmail())
+            ->subject('Test')
+            ->htmlTemplate($template)
+            ->from('noreply@t3dev.ru')
+            ->to('info@t3dev.ru')
+            ->context([
+                'date' => $date
+            ]);
+
+        $this->mailer->send($email);
+    }
+
+
+    /**
+     * @throws \Symfony\Component\Mailer\Exception\TransportExceptionInterface
+     */
+    public function sendSantaEmail(string $sender, string $receiver, string $subject, string $template, $gift)
     {
         $date = new \DateTime();
         $email = (new TemplatedEmail())
             ->subject($subject)
             ->htmlTemplate($template)
-            ->from('')
-            ->to('')
+            ->from($sender)
+            ->to($receiver)
             ->context([
-                'user' => $user,
+                'gift' => $gift,
                 'date' => $date,
-                'plainPassword' => $plainPassword
+                'sender' => $sender,
+                'receiver' => $receiver
             ]);
 
         $this->mailer->send($email);

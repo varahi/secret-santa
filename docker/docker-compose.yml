@@ -64,8 +64,8 @@ services:
   # Mailhoq
   #######################################
   mailhog:
-    image: mailhog/mailhog
+    image: 'mailhog/mailhog:latest'
     container_name: 'santa_mailhog'
     ports:
-      - "1026:1025"
-      - "8026:8025"
+      - "1025:1025"
+      - "8025:8025"

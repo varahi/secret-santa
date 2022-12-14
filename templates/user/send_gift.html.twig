@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+{% block title %}Send gift{% endblock %}
+{% block body %}
+
+    <div class="container">
+        {% include 'partials/_navigation.html.twig' %}
+        {% include 'partials/_message.html.twig' %}
+
+        <h1>{{ 'Send gift'|trans }}</h1>
+        <ul class="list-group">
+            {% for message in messages %}
+                <li class="list-group-item">{{ message|raw }}</li>
+            {% endfor %}
+        </ul>
+        <br /><br />
+
+        {{ form_start(form, {'attr' : {'class': 'form-std', 'autocomplete': 'off'}} ) }}
+        <div class="form-group">
+            {{ form_row(form.message) }}
+            <button type="submit" class="btn btn-primary">{{ 'Send'|trans }}</button>
+        </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

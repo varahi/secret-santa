@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -29,6 +31,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255)]
     private ?string $fullName = null;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Gift::class, cascade: ['persist', 'remove'])]
+    private Collection $gift;
+
+    public function __construct()
+    {
+        $this->gift = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -108,6 +118,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setFullName(string $fullName): self
     {
         $this->fullName = $fullName;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Gift>
+     */
+    public function getGift(): Collection
+    {
+        return $this->gift;
+    }
+
+    public function addGift(Gift $gift): self
+    {
+        if (!$this->gift->contains($gift)) {
+            $this->gift->add($gift);
+            $gift->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGift(Gift $gift): self
+    {
+        if ($this->gift->removeElement($gift)) {
+            // set the owning side to null (unless already changed)
+            if ($gift->getUser() === $this) {
+                $gift->setUser(null);
+            }
+        }
 
         return $this;
     }

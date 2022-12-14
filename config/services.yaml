@@ -5,6 +5,10 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     app.supported_locales: 'en|ru'
+    noreply_email: noreply@t3dev.ru
+    default_subject: Subject from site
+    default_domain: '127.0.0.1'
+    default_scheme: 'http'
 
 services:
     # default configuration for services in *this* file

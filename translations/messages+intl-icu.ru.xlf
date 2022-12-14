@@ -5,9 +5,45 @@
             <tool tool-id="symfony" tool-name="Symfony"/>
         </header>
         <body>
-            <trans-unit id="ma9mBv_" resname="Menu">
-                <source>Menu</source>
-                <target>Меню</target>
+            <trans-unit id="Create user" resname="Create user">
+                <source>Create user</source>
+                <target>Создать пользователя</target>
+            </trans-unit>
+            <trans-unit id="Users list" resname="Users list">
+                <source>Users list</source>
+                <target>Список пользователей</target>
+            </trans-unit>
+            <trans-unit id="Send gift" resname="Send gift">
+                <source>Send gift</source>
+                <target>Отправить поздравление</target>
+            </trans-unit>
+            <trans-unit id="Enter text" resname="Enter text">
+                <source>Enter text</source>
+                <target>Введите текст поздравления</target>
+            </trans-unit>
+            <trans-unit id="Full name" resname="Full name">
+                <source>Full name</source>
+                <target>Полное имя</target>
+            </trans-unit>
+            <trans-unit id="Email" resname="Email">
+                <source>Email</source>
+                <target>Email</target>
+            </trans-unit>
+            <trans-unit id="Send" resname="Send">
+                <source>Send</source>
+                <target>Отправить</target>
+            </trans-unit>
+            <trans-unit id="User created" resname="User created">
+                <source>User created</source>
+                <target>Пользователь создан</target>
+            </trans-unit>
+            <trans-unit id="Will be santa for" resname="Will be santa for">
+                <source>Will be santa for</source>
+                <target>будет сантой для</target>
+            </trans-unit>
+            <trans-unit id="Gift message" resname="Gift message">
+                <source>Gift message</source>
+                <target>Поздравительное сообщение</target>
             </trans-unit>
         </body>
     </file>

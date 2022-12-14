@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Gift;
 use App\Entity\User;
+use App\Form\GiftFormType;
 use App\Form\UserFormType;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,15 +29,65 @@ class UserController extends AbstractController
     }
 
     #[Route('/send-gift', name: 'app_send_gift')]
-    public function sendGift(): Response
-    {
-        return $this->render('user/sendGift.html.twig', [
-            'controller_name' => 'UserController',
+    public function sendGift(
+        Request $request,
+        UserRepository $userRepository,
+        TranslatorInterface $translator,
+        NotifierInterface $notifier,
+        Mailer $mailer
+    ): Response {
+        $gift = new Gift();
+        $form = $this->createForm(GiftFormType::class, $gift);
+        $form->handleRequest($request);
+
+        $users = $userRepository->findAll();
+        $users2 = $users;
+
+        if (count($users) > 1) {
+            for ($i = 0; $i < count($users); $i++) {
+                // Get unique santa:
+                do {
+                    $random = rand(0, count($users2) - 1);
+                } while ($users[$i] == $users2[$random]);
+
+                // Show message
+                $messages[] = $users2[$random]->getFullName() .' '.$translator->trans('Will be santa for', [], 'messages') .' '. $users[$i]->getFullName();
+
+                // Create mail array
+                $mailArray[$i] = [
+                    'senderEmail' => $users2[$random]->getEmail(),
+                    'receiverEmail' => $users[$i]->getEmail()
+                ];
+
+                // Unset santa
+                unset($users2[$random]);
+
+                // Normalize array
+                $users2 = array_values($users2);
+            }
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                if (is_array($mailArray) && isset($mailArray)) {
+                    foreach ($mailArray as $mail) {
+                        $subject = $translator->trans('New gift frim secret Santa', [], 'messages');
+                        $mailer->sendSantaEmail($mail['senderEmail'], $mail['receiverEmail'], $subject, 'emails/santa_gift.html.twig', $gift);
+                    }
+                }
+
+                $message = $translator->trans('User created', [], 'messages');
+                $notifier->send(new Notification($message, ['browser']));
+                return $this->redirectToRoute("app_create_user");
+            }
+        }
+
+        return $this->render('user/send_gift.html.twig', [
+            'messages' => $messages,
+            'form' => $form
         ]);
     }
 
     #[Route('/create-user', name: 'app_create_user')]
-    public function home(
+    public function createUser(
         Request $request,
         ManagerRegistry $doctrine,
         TranslatorInterface $translator,
@@ -49,18 +101,18 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setPassword('111');
             $entityManager = $doctrine->getManager();
-            $entityManager->persist($user);
-            $entityManager->flush();
+            //$entityManager->persist($user);
+            //$entityManager->flush();
 
-            //$subject = $translator->trans('New admin registered', array(), 'messages');
-            //$mailer->sendNewCompanyEmail($user, $subject, 'emails/new_user_creation.html.twig');
+            //$subject = $translator->trans('User created', [], 'messages');
+            $mailer->sendEmail('Test email', 'emails/test.html.twig');
 
-            $message = $translator->trans('User created', array(), 'messages');
+            $message = $translator->trans('User created', [], 'messages');
             $notifier->send(new Notification($message, ['browser']));
             return $this->redirectToRoute("app_create_user");
         }
 
-        return $this->render('user/createUser.html.twig', [
+        return $this->render('user/create_user.html.twig', [
             'form' => $form
         ]);
     }
